@@ -31,7 +31,7 @@
 				}
 			}
 		],
-    "@typescript-eslint/consistent-type-imports": [
+		"@typescript-eslint/consistent-type-imports": [
 			"error",
 			{
 				"prefer": "type-imports",
@@ -63,7 +63,7 @@
 			"error",
 			{ "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
 		],
-    // numbers and booleans are fine in template strings
+		// numbers and booleans are fine in template strings
 		"@typescript-eslint/restrict-template-expressions": [
 			"error",
 			{ "allowNumber": true, "allowBoolean": true }
