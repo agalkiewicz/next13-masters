@@ -12,5 +12,11 @@
 	},
 	"editor.quickSuggestions": {
 		"strings": true
-	}
+	},
+	"editor.insertSpaces": false,
+	"editor.tabSize": 2,
+	"editor.detectIndentation": false,
+
+	"prettier.tabWidth": 2,
+	"prettier.useTabs": true
 }
