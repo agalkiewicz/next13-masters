@@ -7,9 +7,17 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { type Route } from "next";
 
-export const ActiveLink = ({ href, children }: { href: Route; children: ReactNode }) => {
+export const ActiveLink = ({
+	exact = true,
+	href,
+	children,
+}: {
+	exact?: boolean;
+	href: Route;
+	children: ReactNode;
+}) => {
 	const pathname = usePathname();
-	const isActive = pathname === href;
+	const isActive = exact ? pathname === href : pathname.startsWith(href);
 
 	return (
 		<Link
