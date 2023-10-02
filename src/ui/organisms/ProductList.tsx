@@ -1,8 +1,8 @@
-import { type ProductListItemType } from "@/types";
+import { type ProductsListItemType } from "@/types";
 import { ProductListItem } from "@/ui/molecules/ProductListItem";
 
 export type ProductListProps = {
-	products: ProductListItemType[];
+	products: ProductsListItemType[];
 };
 
 export const ProductList = ({ products }: ProductListProps) => {

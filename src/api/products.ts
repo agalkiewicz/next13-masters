@@ -1,4 +1,4 @@
-import { type ProductListItemType } from "@/types";
+import { type ProductsListItemType } from "@/types";
 
 type Rating = {
 	rate: number;
@@ -16,14 +16,33 @@ export type ProductsListItemDto = {
 	longDescription: string;
 };
 
+const ENDPOINT = "https://naszsklep-api.vercel.app/api/products";
+
 export const getProducts = async () => {
-	const response = await fetch("https://naszsklep-api.vercel.app/api/products?take=20");
+	const response = await fetch(`${ENDPOINT}?take=20`);
 	const products = (await response.json()) as ProductsListItemDto[];
 
-	return products.map(({ id, title, price, image }) => ({
-		id: id,
+	return products.map(({ id, title, price, image, description, category }) => ({
+		id,
 		name: title,
-		price: price,
+		description,
+		category,
+		price,
 		image: { src: image, alt: title },
-	})) as ProductListItemType[];
+	})) as ProductsListItemType[];
+};
+
+export const getProduct = async (productId: string) => {
+	const response = await fetch(`${ENDPOINT}/${productId}`);
+	const { id, title, price, image, description, category } =
+		(await response.json()) as ProductsListItemDto;
+
+	return {
+		id,
+		name: title,
+		description,
+		category,
+		price,
+		image: { src: image, alt: title },
+	} as ProductsListItemType;
 };

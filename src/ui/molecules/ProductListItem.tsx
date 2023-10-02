@@ -1,18 +1,23 @@
-import { ProductThumbnail } from "@/ui/atoms/ProductThumbnail";
+import Link from "next/link";
+import { ProductPhoto } from "@/ui/atoms/ProductThumbnail";
 
-import { type ProductListItemType } from "@/types";
-import { ProductBasicInfo } from "@/ui/atoms/ProductBasicInfo";
+import { type ProductsListItemType } from "@/types";
+import { ProductBasicInfo } from "@/ui/molecules/ProductBasicInfo";
 
 export type ProductListItemProps = {
-	product: ProductListItemType;
+	product: ProductsListItemType;
 };
 
-export const ProductListItem = ({ product: { name, price, image } }: ProductListItemProps) => {
+export const ProductListItem = ({
+	product: { id, name, price, image, category },
+}: ProductListItemProps) => {
 	return (
 		<li>
 			<article>
-				<ProductThumbnail src={image.src} alt={image.alt} width={64} height={64} />
-				<ProductBasicInfo name={name} price={price} />
+				<Link href={`/product/${id}`} prefetch={true}>
+					<ProductPhoto src={image.src} alt={image.alt} />
+				</Link>
+				<ProductBasicInfo name={name} price={price} category={category} />
 			</article>
 		</li>
 	);
