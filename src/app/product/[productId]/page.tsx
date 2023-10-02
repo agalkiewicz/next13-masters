@@ -1,7 +1,22 @@
+import { type Metadata } from "next";
 import { getProduct } from "@/api/products";
 import { ProductPrice } from "@/ui/atoms/ProductPrice";
 import { ProductPhoto } from "@/ui/atoms/ProductThumbnail";
 import { ProductCategory } from "@/ui/atoms/ProductCategory";
+
+export async function generateMetadata({
+	params: { productId },
+}: {
+	params: { productId: string };
+}): Promise<Metadata> {
+	const product = await getProduct(productId);
+	const { name, description } = product;
+
+	return {
+		title: name,
+		description,
+	};
+}
 
 export default async function ProductDetailsPage({
 	params: { productId },
