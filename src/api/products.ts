@@ -19,6 +19,7 @@ export type ProductsListItemDto = {
 const PRODUCTS_ENDPOINT = "https://naszsklep-api.vercel.app/api/products";
 
 export const PRODUCTS_LIMIT = 20;
+export const TOTAL_PRODUCTS = 200;
 
 export const getProducts = async ({ page, limit }: { page: number; limit: number }) => {
 	const offset = (page - 1) * limit;

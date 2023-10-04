@@ -1,13 +1,11 @@
 import { Pagination } from "../molecules/Pagination";
-import { PRODUCTS_LIMIT } from "@/api/products";
+import { PRODUCTS_LIMIT, TOTAL_PRODUCTS } from "@/api/products";
 import { type ProductsListItemType } from "@/types";
 import { ProductListItem } from "@/ui/molecules/ProductListItem";
 
 export type ProductListProps = {
 	products: ProductsListItemType[];
 };
-
-const totalElements = 200;
 
 export const ProductList = ({ products }: ProductListProps) => {
 	return (
@@ -23,7 +21,7 @@ export const ProductList = ({ products }: ProductListProps) => {
 			<div className="mt-24 flex justify-center">
 				<Pagination
 					elementsPerPage={PRODUCTS_LIMIT}
-					totalElements={totalElements}
+					totalElements={TOTAL_PRODUCTS}
 					url="/products"
 				/>
 			</div>
