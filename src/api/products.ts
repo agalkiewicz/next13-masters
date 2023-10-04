@@ -16,10 +16,13 @@ export type ProductsListItemDto = {
 	longDescription: string;
 };
 
-const ENDPOINT = "https://naszsklep-api.vercel.app/api/products";
+const PRODUCTS_ENDPOINT = "https://naszsklep-api.vercel.app/api/products";
 
-export const getProducts = async () => {
-	const response = await fetch(`${ENDPOINT}?take=20`);
+export const PRODUCTS_LIMIT = 20;
+
+export const getProducts = async ({ page, limit }: { page: number; limit: number }) => {
+	const offset = (page - 1) * limit;
+	const response = await fetch(`${PRODUCTS_ENDPOINT}?take=${limit}&offset=${offset}`);
 	const products = (await response.json()) as ProductsListItemDto[];
 
 	return products.map(({ id, title, price, image, description, category }) => ({
@@ -33,7 +36,7 @@ export const getProducts = async () => {
 };
 
 export const getProduct = async (productId: string) => {
-	const response = await fetch(`${ENDPOINT}/${productId}`);
+	const response = await fetch(`${PRODUCTS_ENDPOINT}/${productId}`);
 	const { id, title, price, image, description, category } =
 		(await response.json()) as ProductsListItemDto;
 

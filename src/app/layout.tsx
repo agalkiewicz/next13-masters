@@ -18,7 +18,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<nav className="border p-4">
 					<ol>
 						<ActiveLink href="/">Home</ActiveLink>
-						<ActiveLink href="/products">All</ActiveLink>
+						<ActiveLink href="/products" exact={false}>
+							All
+						</ActiveLink>
 					</ol>
 				</nav>
 				{children}
