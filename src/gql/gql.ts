@@ -14,10 +14,20 @@ import * as types from './graphql';
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "query Categories {\n  categories {\n    id\n    name\n    slug\n  }\n}": types.CategoriesDocument,
+    "query Category($where: CategoryWhereUniqueInput!) {\n  category(where: $where) {\n    name\n  }\n}": types.CategoryDocument,
     "query ProductGetById($id: ID!) {\n  product(where: {id: $id}) {\n    id\n    name\n    description\n    categories(first: 1) {\n      name\n    }\n    images(first: 1) {\n      url\n    }\n    price\n  }\n}": types.ProductGetByIdDocument,
     "query ProductsGetList($limit: Int) {\n  products(first: $limit) {\n    id\n    name\n    description\n    categories(first: 1) {\n      name\n    }\n    images(first: 1) {\n      url\n    }\n    price\n  }\n}": types.ProductsGetListDocument,
 };
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query Categories {\n  categories {\n    id\n    name\n    slug\n  }\n}"): typeof import('./graphql').CategoriesDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query Category($where: CategoryWhereUniqueInput!) {\n  category(where: $where) {\n    name\n  }\n}"): typeof import('./graphql').CategoryDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

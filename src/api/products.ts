@@ -1,9 +1,6 @@
 import { notFound } from "next/navigation";
-import {
-	ProductsGetListDocument,
-	ProductGetByIdDocument,
-	type TypedDocumentString,
-} from "@/gql/graphql";
+import { executeGraphql } from "./_helpers";
+import { ProductsGetListDocument, ProductGetByIdDocument } from "@/gql/graphql";
 import { type ProductsListItemType } from "@/types";
 
 type Rating = {
@@ -63,31 +60,4 @@ export const getProduct = async (productId: string) => {
 		price,
 		image: images[0] && { src: images[0].url, alt: name },
 	} as ProductsListItemType;
-};
-
-const executeGraphql = async <TResult, TVariables>(
-	query: TypedDocumentString<TResult, TVariables>,
-	variables: TVariables,
-): Promise<TResult> => {
-	if (!process.env.GRAPHQL_URL) throw new Error("Missing GRAPHQL_URL env variable");
-
-	const res = await fetch(process.env.GRAPHQL_URL, {
-		method: "POST",
-		body: JSON.stringify({ query, variables }),
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
-
-	type GraphqlResponse<T> =
-		| { data?: undefined; errors: { message: string }[] }
-		| { data: T; errors?: undefined };
-
-	const graphqlResponse = (await res.json()) as GraphqlResponse<TResult>;
-
-	if (graphqlResponse.errors) {
-		throw new Error("GraphQL error", { cause: graphqlResponse.errors });
-	}
-
-	return graphqlResponse.data;
 };
