@@ -15,7 +15,7 @@ export const ProductListItem = ({
 		<li>
 			<article>
 				<Link href={`/product/${id}`} prefetch={true}>
-					<ProductPhoto src={image.src} alt={image.alt} />
+					{image && <ProductPhoto src={image.src} alt={image.alt} />}
 				</Link>
 				<ProductBasicInfo name={name} price={price} category={category} />
 			</article>

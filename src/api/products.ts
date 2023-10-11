@@ -1,3 +1,4 @@
+import { ProductsGetListDocument, type TypedDocumentString } from "@/gql/graphql";
 import { type ProductsListItemType } from "@/types";
 
 type Rating = {
@@ -21,18 +22,24 @@ const PRODUCTS_ENDPOINT = "https://naszsklep-api.vercel.app/api/products";
 export const PRODUCTS_LIMIT = 20;
 export const TOTAL_PRODUCTS = 200;
 
-export const getProducts = async ({ page, limit }: { page: number; limit: number }) => {
-	const offset = (page - 1) * limit;
-	const response = await fetch(`${PRODUCTS_ENDPOINT}?take=${limit}&offset=${offset}`);
-	const products = (await response.json()) as ProductsListItemDto[];
+// TODO: handle pagination
+export const getProducts = async ({
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	limit = PRODUCTS_LIMIT,
+}: {
+	page: number;
+	limit?: number;
+}) => {
+	const graphqlResponse = await executeGraphql(ProductsGetListDocument, { limit });
 
-	return products.map(({ id, title, price, image, description, category }) => ({
+	return graphqlResponse.products.map(({ id, name, price, images, description, categories }) => ({
 		id,
-		name: title,
+		name,
 		description,
-		category,
+		category: categories[0]?.name || "",
 		price,
-		image: { src: image, alt: title },
+		image: images[0] && { src: images[0].url, alt: name },
 	})) as ProductsListItemType[];
 };
 
@@ -49,4 +56,31 @@ export const getProduct = async (productId: string) => {
 		price,
 		image: { src: image, alt: title },
 	} as ProductsListItemType;
+};
+
+const executeGraphql = async <TResult, TVariables>(
+	query: TypedDocumentString<TResult, TVariables>,
+	variables: TVariables,
+): Promise<TResult> => {
+	if (!process.env.GRAPHQL_URL) throw new Error("Missing GRAPHQL_URL env variable");
+
+	const res = await fetch(process.env.GRAPHQL_URL, {
+		method: "POST",
+		body: JSON.stringify({ query, variables }),
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+
+	type GraphqlResponse<T> =
+		| { data?: undefined; errors: { message: string }[] }
+		| { data: T; errors?: undefined };
+
+	const graphqlResponse = (await res.json()) as GraphqlResponse<TResult>;
+
+	if (graphqlResponse.errors) {
+		throw new Error("GraphQL error", { cause: graphqlResponse.errors });
+	}
+
+	return graphqlResponse.data;
 };

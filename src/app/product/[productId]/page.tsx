@@ -24,17 +24,11 @@ export default async function ProductDetailsPage({
 	params: { productId: string };
 }) {
 	const product = await getProduct(productId);
-	const {
-		image: { src, alt },
-		name,
-		price,
-		description,
-		category,
-	} = product;
+	const { image, name, price, description, category } = product;
 
 	return (
 		<div className="m-auto flex gap-14 px-24 py-12">
-			<ProductPhoto src={src} alt={alt} big />
+			{image && <ProductPhoto src={image.src} alt={image.alt} big />}
 			<div className="w-96">
 				<div className="flex justify-between">
 					<h1 className="font-semibold text-slate-700">{name}</h1>
