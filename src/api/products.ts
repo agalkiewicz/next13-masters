@@ -1,4 +1,9 @@
-import { ProductsGetListDocument, type TypedDocumentString } from "@/gql/graphql";
+import { notFound } from "next/navigation";
+import {
+	ProductsGetListDocument,
+	ProductGetByIdDocument,
+	type TypedDocumentString,
+} from "@/gql/graphql";
 import { type ProductsListItemType } from "@/types";
 
 type Rating = {
@@ -16,8 +21,6 @@ export type ProductsListItemDto = {
 	image: string;
 	longDescription: string;
 };
-
-const PRODUCTS_ENDPOINT = "https://naszsklep-api.vercel.app/api/products";
 
 export const PRODUCTS_LIMIT = 20;
 export const TOTAL_PRODUCTS = 200;
@@ -44,17 +47,21 @@ export const getProducts = async ({
 };
 
 export const getProduct = async (productId: string) => {
-	const response = await fetch(`${PRODUCTS_ENDPOINT}/${productId}`);
-	const { id, title, price, image, description, category } =
-		(await response.json()) as ProductsListItemDto;
+	const { product } = await executeGraphql(ProductGetByIdDocument, { id: productId });
+
+	if (!product) {
+		notFound();
+	}
+
+	const { id, name, price, images, description, categories } = product;
 
 	return {
 		id,
-		name: title,
+		name,
 		description,
-		category,
+		category: categories[0]?.name || "",
 		price,
-		image: { src: image, alt: title },
+		image: images[0] && { src: images[0].url, alt: name },
 	} as ProductsListItemType;
 };
 
