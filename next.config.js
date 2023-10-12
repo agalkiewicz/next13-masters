@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	experimental: {
-		typedRoutes: true,
+		typedRoutes: false,
 	},
 	async redirects() {
 		return [
@@ -11,8 +11,8 @@ const nextConfig = {
 				permanent: true,
 			},
 			{
-				source: "/categories/:slug",
-				destination: "/categories/:slug/1",
+				source: "/categories/:id",
+				destination: "/categories/:id/1",
 				permanent: true,
 			},
 		];

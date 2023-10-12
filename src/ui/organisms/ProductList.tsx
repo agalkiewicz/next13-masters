@@ -1,5 +1,5 @@
 import { Pagination } from "../molecules/Pagination";
-import { PRODUCTS_LIMIT, TOTAL_PRODUCTS } from "@/api/products";
+import { PRODUCTS_LIMIT } from "@/api/products";
 import { type ProductsListItemType } from "@/types";
 import { ProductListItem } from "@/ui/molecules/ProductListItem";
 

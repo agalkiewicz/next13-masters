@@ -4,13 +4,13 @@ import { ProductList } from "@/ui/organisms/ProductList";
 import { PRODUCTS_LIMIT } from "@/api/products";
 
 export default async function CategoryProducts({
-	params: { id, pageNumber },
+	params: { id, page },
 }: {
-	params: { id: string; pageNumber: number };
+	params: { id: string; page: number };
 }) {
 	const category = await getCategory({
 		categoryId: id,
-		page: pageNumber,
+		page: page,
 		take: PRODUCTS_LIMIT,
 	});
 
