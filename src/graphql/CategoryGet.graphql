@@ -1,0 +1,23 @@
+query Category($where: CategoryWhereUniqueInput!, $skip: Int, $first: Int) {
+	productsConnection {
+		aggregate {
+			count
+		}
+	}
+	category(where: $where) {
+		name
+		products(skip: $skip, first: $first) {
+			id
+			slug
+			name
+			description
+			categories(first: 1) {
+				name
+			}
+			images(first: 1) {
+				url
+			}
+			price
+		}
+	}
+}

@@ -1,9 +1,6 @@
 import { notFound } from "next/navigation";
-import {
-	ProductsGetListDocument,
-	ProductGetByIdDocument,
-	type TypedDocumentString,
-} from "@/gql/graphql";
+import { executeGraphql } from "./_helpers";
+import { ProductsGetListDocument, ProductGetByIdDocument } from "@/gql/graphql";
 import { type ProductsListItemType } from "@/types";
 
 type Rating = {
@@ -22,21 +19,20 @@ export type ProductsListItemDto = {
 	longDescription: string;
 };
 
-export const PRODUCTS_LIMIT = 20;
+export const PRODUCTS_LIMIT = 4;
 export const TOTAL_PRODUCTS = 200;
 
-// TODO: handle pagination
-export const getProducts = async ({
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	limit = PRODUCTS_LIMIT,
-}: {
-	page: number;
-	limit?: number;
-}) => {
-	const graphqlResponse = await executeGraphql(ProductsGetListDocument, { limit });
+export const getProducts = async ({ page, take }: { page: number; take: number }) => {
+	const skip = (page - 1) * take;
 
-	return graphqlResponse.products.map(({ id, name, price, images, description, categories }) => ({
+	const {
+		products,
+		productsConnection: {
+			aggregate: { count: productsCount },
+		},
+	} = await executeGraphql(ProductsGetListDocument, { skip, first: take });
+
+	const mappedProducts = products.map(({ id, name, price, images, description, categories }) => ({
 		id,
 		name,
 		description,
@@ -44,6 +40,8 @@ export const getProducts = async ({
 		price,
 		image: images[0] && { src: images[0].url, alt: name },
 	})) as ProductsListItemType[];
+
+	return { products: mappedProducts, productsCount };
 };
 
 export const getProduct = async (productId: string) => {
@@ -63,31 +61,4 @@ export const getProduct = async (productId: string) => {
 		price,
 		image: images[0] && { src: images[0].url, alt: name },
 	} as ProductsListItemType;
-};
-
-const executeGraphql = async <TResult, TVariables>(
-	query: TypedDocumentString<TResult, TVariables>,
-	variables: TVariables,
-): Promise<TResult> => {
-	if (!process.env.GRAPHQL_URL) throw new Error("Missing GRAPHQL_URL env variable");
-
-	const res = await fetch(process.env.GRAPHQL_URL, {
-		method: "POST",
-		body: JSON.stringify({ query, variables }),
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
-
-	type GraphqlResponse<T> =
-		| { data?: undefined; errors: { message: string }[] }
-		| { data: T; errors?: undefined };
-
-	const graphqlResponse = (await res.json()) as GraphqlResponse<TResult>;
-
-	if (graphqlResponse.errors) {
-		throw new Error("GraphQL error", { cause: graphqlResponse.errors });
-	}
-
-	return graphqlResponse.data;
 };

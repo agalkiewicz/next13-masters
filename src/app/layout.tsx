@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import { ActiveLink } from "@/ui/atoms/ActiveLink";
 import "./globals.css";
+import { getCategories } from "@/api/categories";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,19 +12,28 @@ export const metadata: Metadata = {
 	description: "T-shirts, hoodies, and more.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+	const categories = await getCategories();
+
 	return (
 		<html lang="en">
 			<body className={inter.className}>
 				<nav className="border p-4">
-					<ol>
+					<ul>
 						<ActiveLink href="/">Home</ActiveLink>
 						<ActiveLink href="/products" exact={false}>
 							All
 						</ActiveLink>
-					</ol>
+						{categories.map(({ id, name }) => (
+							<ActiveLink key={id} href={`/categories/${id}`} exact={false}>
+								{name}
+							</ActiveLink>
+						))}
+					</ul>
 				</nav>
-				{children}
+				<section className="mx-auto max-w-md p-12 sm:max-w-2xl sm:py-16 md:max-w-4xl lg:max-w-7xl">
+					{children}
+				</section>
 			</body>
 		</html>
 	);
