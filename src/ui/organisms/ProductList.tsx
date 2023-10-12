@@ -5,9 +5,10 @@ import { ProductListItem } from "@/ui/molecules/ProductListItem";
 
 export type ProductListProps = {
 	products: ProductsListItemType[];
+	productsCount: number;
 };
 
-export const ProductList = ({ products }: ProductListProps) => {
+export const ProductList = ({ products, productsCount }: ProductListProps) => {
 	return (
 		<div>
 			<ul
@@ -19,11 +20,7 @@ export const ProductList = ({ products }: ProductListProps) => {
 				))}
 			</ul>
 			<div className="mt-24 flex justify-center">
-				<Pagination
-					elementsPerPage={PRODUCTS_LIMIT}
-					totalElements={TOTAL_PRODUCTS}
-					url="/products"
-				/>
+				<Pagination elementsPerPage={PRODUCTS_LIMIT} totalElements={productsCount} />
 			</div>
 		</div>
 	);

@@ -19,21 +19,20 @@ export type ProductsListItemDto = {
 	longDescription: string;
 };
 
-export const PRODUCTS_LIMIT = 20;
+export const PRODUCTS_LIMIT = 4;
 export const TOTAL_PRODUCTS = 200;
 
-// TODO: handle pagination
-export const getProducts = async ({
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	limit = PRODUCTS_LIMIT,
-}: {
-	page: number;
-	limit?: number;
-}) => {
-	const graphqlResponse = await executeGraphql(ProductsGetListDocument, { limit });
+export const getProducts = async ({ page, take }: { page: number; take: number }) => {
+	const skip = (page - 1) * take;
 
-	return graphqlResponse.products.map(({ id, name, price, images, description, categories }) => ({
+	const {
+		products,
+		productsConnection: {
+			aggregate: { count: productsCount },
+		},
+	} = await executeGraphql(ProductsGetListDocument, { skip, first: take });
+
+	const mappedProducts = products.map(({ id, name, price, images, description, categories }) => ({
 		id,
 		name,
 		description,
@@ -41,6 +40,8 @@ export const getProducts = async ({
 		price,
 		image: images[0] && { src: images[0].url, alt: name },
 	})) as ProductsListItemType[];
+
+	return { products: mappedProducts, productsCount };
 };
 
 export const getProduct = async (productId: string) => {

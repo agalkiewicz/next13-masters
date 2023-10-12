@@ -1,5 +1,10 @@
-query ProductsGetList($limit: Int) {
-	products(first: $limit) {
+query ProductsGetList($skip: Int, $first: Int) {
+	productsConnection {
+		aggregate {
+			count
+		}
+	}
+	products(skip: $skip, first: $first) {
 		id
 		name
 		description
