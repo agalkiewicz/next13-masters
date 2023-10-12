@@ -22,7 +22,10 @@ export const ActiveLink = ({
 	return (
 		<Link
 			href={href}
-			className={clsx(`px-4 hover:text-slate-400`, isActive && "font-medium text-slate-400")}
+			className={clsx(
+				`mx-4 text-slate-400`,
+				isActive && "border-b-2 border-black font-medium  text-black",
+			)}
 			{...(isActive && { "aria-current": "page" })}
 		>
 			{children}
