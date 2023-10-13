@@ -10729,6 +10729,20 @@ export type CategoryQueryVariables = Exact<{
 
 export type CategoryQuery = { productsConnection: { aggregate: { count: number } }, category?: { name: string, products: Array<{ id: string, slug: string, name: string, description: string, price: number, categories: Array<{ name: string }>, images: Array<{ url: string }> }> } | null };
 
+export type CollectionQueryVariables = Exact<{
+  where: CollectionWhereUniqueInput;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type CollectionQuery = { collection?: { name: string, products: Array<{ id: string, name: string, description: string, price: number, categories: Array<{ name: string }>, images: Array<{ url: string }> }> } | null };
+
+export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CollectionsQuery = { collections: Array<{ id: string, name: string, slug: string }> };
+
 export type ProductGetByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -10793,6 +10807,34 @@ export const CategoryDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CategoryQuery, CategoryQueryVariables>;
+export const CollectionDocument = new TypedDocumentString(`
+    query Collection($where: CollectionWhereUniqueInput!, $skip: Int, $first: Int) {
+  collection(where: $where) {
+    name
+    products(skip: $skip, first: $first) {
+      id
+      name
+      description
+      categories(first: 1) {
+        name
+      }
+      images(first: 1) {
+        url
+      }
+      price
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<CollectionQuery, CollectionQueryVariables>;
+export const CollectionsDocument = new TypedDocumentString(`
+    query Collections {
+  collections {
+    id
+    name
+    slug
+  }
+}
+    `) as unknown as TypedDocumentString<CollectionsQuery, CollectionsQueryVariables>;
 export const ProductGetByIdDocument = new TypedDocumentString(`
     query ProductGetById($id: ID!) {
   product(where: {id: $id}) {

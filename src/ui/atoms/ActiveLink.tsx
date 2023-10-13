@@ -24,7 +24,7 @@ export const ActiveLink = ({
 			href={href}
 			className={clsx(
 				`mx-4 text-slate-400`,
-				isActive && "border-b-2 border-black font-medium  text-black",
+				isActive && "border-b-2 border-slate-900 text-slate-900",
 			)}
 			{...(isActive && { "aria-current": "page" })}
 		>

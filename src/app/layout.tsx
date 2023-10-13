@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { ActiveLink } from "@/ui/atoms/ActiveLink";
 import "./globals.css";
 import { getCategories } from "@/api/categories";
+import { getCollections } from "@/api/collections";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	const categories = await getCategories();
+	const collections = await getCollections();
 
 	return (
 		<html lang="en">
@@ -26,6 +28,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 						</ActiveLink>
 						{categories.map(({ id, name }) => (
 							<ActiveLink key={id} href={`/categories/${id}`} exact={false}>
+								{name}
+							</ActiveLink>
+						))}
+						{collections.map(({ id, name }) => (
+							<ActiveLink key={id} href={`/collections/${id}`} exact={false}>
 								{name}
 							</ActiveLink>
 						))}

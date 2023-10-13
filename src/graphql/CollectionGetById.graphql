@@ -1,0 +1,17 @@
+query Collection($where: CollectionWhereUniqueInput!, $skip: Int, $first: Int) {
+	collection(where: $where) {
+		name
+		products(skip: $skip, first: $first) {
+			id
+			name
+			description
+			categories(first: 1) {
+				name
+			}
+			images(first: 1) {
+				url
+			}
+			price
+		}
+	}
+}
