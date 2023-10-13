@@ -88,3 +88,20 @@ export const getRelatedProducts = async ({
 		image: images[0] && { src: images[0].url, alt: name },
 	})) as ProductsListItemType[];
 };
+
+export const searchProducts = async (searchQuery: string) => {
+	const { products } = await executeGraphql(ProductsDocument, {
+		where: {
+			name_contains: searchQuery,
+		},
+	});
+
+	return products.map(({ id, name, price, images, description, categories }) => ({
+		id,
+		name,
+		description,
+		category: categories[0]?.name || "",
+		price,
+		image: images[0] && { src: images[0].url, alt: name },
+	})) as ProductsListItemType[];
+};
