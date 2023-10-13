@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 import { ActiveLink } from "../atoms/ActiveLink";
 
 type Category = { id: string; name: string; slug: string };
@@ -14,11 +16,17 @@ export const Navbar = ({
 }) => {
 	const router = useRouter();
 
-	const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === "Enter") {
-			const value = e.currentTarget.value;
-			router.push(`/search?query=${value.trim()}`);
+	const [inputValue, setInputValue] = useState<string>("");
+	const [debouncedValue] = useDebounce(inputValue, 500);
+
+	useEffect(() => {
+		if (debouncedValue) {
+			router.push(`/search?query=${debouncedValue}`);
 		}
+	});
+
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setInputValue(event.target.value);
 	};
 
 	return (
@@ -43,7 +51,7 @@ export const Navbar = ({
 				className="border-b-2 focus:outline-none"
 				type="search"
 				role="searchbox"
-				onKeyUp={(e) => handleSearch(e)}
+				onChange={handleInputChange}
 			/>
 		</nav>
 	);
