@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { executeGraphql } from "./_helpers";
-import { ProductsGetListDocument, ProductGetByIdDocument } from "@/gql/graphql";
+import { ProductsGetListDocument, ProductGetByIdDocument, ProductsDocument } from "@/gql/graphql";
 import { type ProductsListItemType } from "@/types";
 
 type Rating = {
@@ -61,4 +61,30 @@ export const getProduct = async (productId: string) => {
 		price,
 		image: images[0] && { src: images[0].url, alt: name },
 	} as ProductsListItemType;
+};
+
+export const getRelatedProducts = async ({
+	categoryName,
+	excludedId,
+}: {
+	categoryName: string;
+	excludedId: string;
+}) => {
+	const { products } = await executeGraphql(ProductsDocument, {
+		where: {
+			categories_some: {
+				name: categoryName,
+			},
+			id_not: excludedId,
+		},
+	});
+
+	return products.map(({ id, name, price, images, description, categories }) => ({
+		id,
+		name,
+		description,
+		category: categories[0]?.name || "",
+		price,
+		image: images[0] && { src: images[0].url, alt: name },
+	})) as ProductsListItemType[];
 };

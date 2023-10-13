@@ -20,6 +20,7 @@ const documents = {
     "query Collections {\n  collections {\n    id\n    name\n    slug\n  }\n}": types.CollectionsDocument,
     "query ProductGetById($id: ID!) {\n  product(where: {id: $id}) {\n    id\n    name\n    description\n    categories(first: 1) {\n      name\n    }\n    images(first: 1) {\n      url\n    }\n    price\n  }\n}": types.ProductGetByIdDocument,
     "query ProductsGetList($skip: Int, $first: Int) {\n  productsConnection {\n    aggregate {\n      count\n    }\n  }\n  products(skip: $skip, first: $first) {\n    id\n    name\n    description\n    categories(first: 1) {\n      name\n    }\n    images(first: 1) {\n      url\n    }\n    price\n  }\n}": types.ProductsGetListDocument,
+    "query Products($where: ProductWhereInput) {\n  products(where: $where) {\n    id\n    name\n    description\n    categories(first: 1) {\n      name\n    }\n    images(first: 1) {\n      url\n    }\n    price\n  }\n}": types.ProductsDocument,
 };
 
 /**
@@ -46,6 +47,10 @@ export function graphql(source: "query ProductGetById($id: ID!) {\n  product(whe
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "query ProductsGetList($skip: Int, $first: Int) {\n  productsConnection {\n    aggregate {\n      count\n    }\n  }\n  products(skip: $skip, first: $first) {\n    id\n    name\n    description\n    categories(first: 1) {\n      name\n    }\n    images(first: 1) {\n      url\n    }\n    price\n  }\n}"): typeof import('./graphql').ProductsGetListDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query Products($where: ProductWhereInput) {\n  products(where: $where) {\n    id\n    name\n    description\n    categories(first: 1) {\n      name\n    }\n    images(first: 1) {\n      url\n    }\n    price\n  }\n}"): typeof import('./graphql').ProductsDocument;
 
 
 export function graphql(source: string) {
