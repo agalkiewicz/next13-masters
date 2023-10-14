@@ -2,6 +2,8 @@
 const nextConfig = {
 	experimental: {
 		typedRoutes: false,
+		mdxRs: true,
+		serverActions: true,
 	},
 	async redirects() {
 		return [
