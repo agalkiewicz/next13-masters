@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { Quantity } from "./Quantity";
 import { formatMoney } from "@/utils";
 import { getOrCreateCart } from "@/api/cart";
 
@@ -35,7 +36,9 @@ export default async function CartPage() {
 						return (
 							<tr key={item.id}>
 								<td className="border px-6 py-3">{item.product.name}</td>
-								<td className="border px-6 py-3">{item.quantity}</td>
+								<td className="border px-6 py-3">
+									<Quantity itemId={item.id} quantity={item.quantity} />
+								</td>
 								<td className="border px-6 py-3">{formatMoney(item.product.price)}</td>
 							</tr>
 						);
