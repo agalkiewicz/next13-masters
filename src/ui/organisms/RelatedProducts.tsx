@@ -13,7 +13,7 @@ export const RelatedProducts = async ({
 
 	return (
 		<Suspense>
-			<h2 className="mb-6 text-base">Related Products</h2>
+			<h2 className="mb-6 text-xl font-semibold">Related Products</h2>
 			<div data-testid="related-products">
 				<ProductList products={products} />
 			</div>

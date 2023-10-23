@@ -14,6 +14,9 @@ import * as types from './graphql';
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "mutation CartAddItem($cartId: ID!, $productId: ID!, $total: Int!) {\n  createOrderItem(\n    data: {quantity: 1, total: $total, order: {connect: {id: $cartId}}, product: {connect: {id: $productId}}}\n  ) {\n    id\n  }\n}": types.CartAddItemDocument,
+    "mutation CartCreate {\n  createOrder(data: {total: 0}) {\n    id\n    orderItems {\n      id\n      quantity\n      product {\n        id\n        name\n        price\n        images {\n          url\n        }\n      }\n    }\n    total\n  }\n}": types.CartCreateDocument,
+    "query CartGetById($id: ID!) {\n  order(where: {id: $id}, stage: DRAFT) {\n    id\n    orderItems {\n      id\n      quantity\n      product {\n        id\n        name\n        price\n        images {\n          url\n        }\n      }\n    }\n    total\n  }\n}": types.CartGetByIdDocument,
     "query Categories {\n  categories {\n    id\n    name\n    slug\n  }\n}": types.CategoriesDocument,
     "query Category($where: CategoryWhereUniqueInput!, $skip: Int, $first: Int) {\n  productsConnection {\n    aggregate {\n      count\n    }\n  }\n  category(where: $where) {\n    name\n    products(skip: $skip, first: $first) {\n      id\n      slug\n      name\n      description\n      categories(first: 1) {\n        name\n      }\n      images(first: 1) {\n        url\n      }\n      price\n    }\n  }\n}": types.CategoryDocument,
     "query Collection($where: CollectionWhereUniqueInput!, $skip: Int, $first: Int) {\n  collection(where: $where) {\n    name\n    products(skip: $skip, first: $first) {\n      id\n      name\n      description\n      categories(first: 1) {\n        name\n      }\n      images(first: 1) {\n        url\n      }\n      price\n    }\n  }\n}": types.CollectionDocument,
@@ -23,6 +26,18 @@ const documents = {
     "query Products($where: ProductWhereInput) {\n  products(where: $where) {\n    id\n    name\n    description\n    categories(first: 1) {\n      name\n    }\n    images(first: 1) {\n      url\n    }\n    price\n  }\n}": types.ProductsDocument,
 };
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation CartAddItem($cartId: ID!, $productId: ID!, $total: Int!) {\n  createOrderItem(\n    data: {quantity: 1, total: $total, order: {connect: {id: $cartId}}, product: {connect: {id: $productId}}}\n  ) {\n    id\n  }\n}"): typeof import('./graphql').CartAddItemDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation CartCreate {\n  createOrder(data: {total: 0}) {\n    id\n    orderItems {\n      id\n      quantity\n      product {\n        id\n        name\n        price\n        images {\n          url\n        }\n      }\n    }\n    total\n  }\n}"): typeof import('./graphql').CartCreateDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query CartGetById($id: ID!) {\n  order(where: {id: $id}, stage: DRAFT) {\n    id\n    orderItems {\n      id\n      quantity\n      product {\n        id\n        name\n        price\n        images {\n          url\n        }\n      }\n    }\n    total\n  }\n}"): typeof import('./graphql').CartGetByIdDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

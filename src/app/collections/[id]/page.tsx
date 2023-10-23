@@ -24,7 +24,7 @@ export default async function CollectionProducts({ params: { id } }: { params: {
 
 	return (
 		<>
-			<h1 className="mb-6 text-lg">{collection.name}</h1>
+			<h1 className="mb-6 text-2xl font-semibold">{collection.name}</h1>
 			<ProductList products={collection.products} />
 		</>
 	);

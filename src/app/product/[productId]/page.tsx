@@ -4,6 +4,7 @@ import { ProductPrice } from "@/ui/atoms/ProductPrice";
 import { ProductPhoto } from "@/ui/atoms/ProductThumbnail";
 import { ProductCategory } from "@/ui/atoms/ProductCategory";
 import { RelatedProducts } from "@/ui/organisms/RelatedProducts";
+import { addProductToCart, getOrCreateCart } from "@/api/cart";
 
 export async function generateMetadata({
 	params: { productId },
@@ -21,7 +22,6 @@ export async function generateMetadata({
 
 export default async function ProductDetailsPage({
 	params: { productId },
-	params,
 }: {
 	params: { productId: string };
 }) {
@@ -30,7 +30,8 @@ export default async function ProductDetailsPage({
 
 	async function addProductToCartAction() {
 		"use server";
-		console.log("productId", params.productId);
+		const cart = await getOrCreateCart();
+		await addProductToCart(cart.id, product.id);
 	}
 
 	return (

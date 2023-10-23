@@ -11,6 +11,7 @@ export const executeGraphql = async <TResult, TVariables>(
 		body: JSON.stringify({ query, variables }),
 		headers: {
 			"Content-Type": "application/json",
+			Authorization: `Bearer ${process.env.GRAPHQL_API_KEY}`,
 		},
 	});
 

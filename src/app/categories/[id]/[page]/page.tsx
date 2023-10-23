@@ -37,7 +37,7 @@ export default async function CategoryProducts({
 
 	return (
 		<>
-			<h1 className="mb-6 text-lg">{category.name}</h1>
+			<h1 className="mb-6 text-2xl font-semibold">{category.name}</h1>
 			<ProductList products={category.products} productsCount={category.productsCount} />
 		</>
 	);
