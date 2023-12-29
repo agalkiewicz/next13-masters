@@ -2483,6 +2483,46 @@ export type DocumentVersion = {
   stage: Stage;
 };
 
+/** An object with an ID */
+export type Entity = {
+  /** The id of the object. */
+  id: Scalars['ID']['output'];
+  /** The Stage of an object */
+  stage: Stage;
+};
+
+/** This enumeration holds all typenames that implement the Entity interface. Components implement the Entity interface. At the moment models are not supported, models are listed in this enum to avoid an empty enum without any components. */
+export type EntityTypeName =
+  /** Asset system model */
+  | 'Asset'
+  /** Category of products, e.g. Menswear. */
+  | 'Category'
+  /** Collection of products, e.g. Winter Sale. */
+  | 'Collection'
+  | 'Currency'
+  | 'Order'
+  | 'OrderItem'
+  | 'Product'
+  | 'ProductColorVariant'
+  | 'ProductSizeColorVariant'
+  | 'ProductSizeVariant'
+  | 'Review'
+  /** Scheduled Operation system model */
+  | 'ScheduledOperation'
+  /** Scheduled Release system model */
+  | 'ScheduledRelease'
+  /** User system model */
+  | 'User';
+
+/** Allows to specify input to query components directly */
+export type EntityWhereInput = {
+  /** The ID of an object */
+  id: Scalars['ID']['input'];
+  stage: Stage;
+  /** The Type name of an object */
+  typename: EntityTypeName;
+};
+
 export type ImageFit =
   /** Resizes the image to fit within the specified parameters without distorting, cropping, or changing the aspect ratio. */
   | 'clip'
@@ -7980,6 +8020,8 @@ export type Query = {
   /** Retrieve document version */
   currencyVersion?: Maybe<DocumentVersion>;
   /** Fetches an object given its ID */
+  entities?: Maybe<Array<Entity>>;
+  /** Fetches an object given its ID */
   node?: Maybe<Node>;
   /** Retrieve a single order */
   order?: Maybe<Order>;
@@ -8207,6 +8249,11 @@ export type QueryCurrencyArgs = {
 
 export type QueryCurrencyVersionArgs = {
   where: VersionWhereInput;
+};
+
+
+export type QueryEntitiesArgs = {
+  where: Array<EntityWhereInput>;
 };
 
 
@@ -10715,6 +10762,35 @@ export type _SystemDateTimeFieldVariation =
   | 'combined'
   | 'localization';
 
+export type CartAddItemMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+  productId: Scalars['ID']['input'];
+  total: Scalars['Int']['input'];
+}>;
+
+
+export type CartAddItemMutation = { createOrderItem?: { id: string } | null };
+
+export type CartCreateMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CartCreateMutation = { createOrder?: { id: string, total: number, orderItems: Array<{ id: string, quantity: number, product?: { id: string, name: string, price: number, images: Array<{ url: string }> } | null }> } | null };
+
+export type CartGetByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type CartGetByIdQuery = { order?: { id: string, total: number, orderItems: Array<{ id: string, quantity: number, product?: { id: string, name: string, price: number, images: Array<{ url: string }> } | null }> } | null };
+
+export type CartSetItemQuantityMutationVariables = Exact<{
+  itemId: Scalars['ID']['input'];
+  quantity: Scalars['Int']['input'];
+}>;
+
+
+export type CartSetItemQuantityMutation = { updateOrderItem?: { id: string, quantity: number } | null };
+
 export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -10780,6 +10856,63 @@ export class TypedDocumentString<TResult, TVariables>
   }
 }
 
+export const CartAddItemDocument = new TypedDocumentString(`
+    mutation CartAddItem($cartId: ID!, $productId: ID!, $total: Int!) {
+  createOrderItem(
+    data: {quantity: 1, total: $total, order: {connect: {id: $cartId}}, product: {connect: {id: $productId}}}
+  ) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CartAddItemMutation, CartAddItemMutationVariables>;
+export const CartCreateDocument = new TypedDocumentString(`
+    mutation CartCreate {
+  createOrder(data: {total: 0}) {
+    id
+    orderItems {
+      id
+      quantity
+      product {
+        id
+        name
+        price
+        images {
+          url
+        }
+      }
+    }
+    total
+  }
+}
+    `) as unknown as TypedDocumentString<CartCreateMutation, CartCreateMutationVariables>;
+export const CartGetByIdDocument = new TypedDocumentString(`
+    query CartGetById($id: ID!) {
+  order(where: {id: $id}, stage: DRAFT) {
+    id
+    orderItems {
+      id
+      quantity
+      product {
+        id
+        name
+        price
+        images {
+          url
+        }
+      }
+    }
+    total
+  }
+}
+    `) as unknown as TypedDocumentString<CartGetByIdQuery, CartGetByIdQueryVariables>;
+export const CartSetItemQuantityDocument = new TypedDocumentString(`
+    mutation CartSetItemQuantity($itemId: ID!, $quantity: Int!) {
+  updateOrderItem(where: {id: $itemId}, data: {quantity: $quantity}) {
+    id
+    quantity
+  }
+}
+    `) as unknown as TypedDocumentString<CartSetItemQuantityMutation, CartSetItemQuantityMutationVariables>;
 export const CategoriesDocument = new TypedDocumentString(`
     query Categories {
   categories {
